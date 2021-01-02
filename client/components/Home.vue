@@ -1,0 +1,122 @@
+<template>
+  <div>
+    <article v-for="article in articles" :key="article.id">
+      <div class="article-content" v-if="commentaries.id !== article.id">
+        <div class="article-title">
+          <h2>{{ article.name }} - {{ article.price }}€</h2>
+          <div>
+            <button v-if="!isInPanier(article.id)" @click="addToPanier(article.id)">Ajouter au panier</button>
+            <button v-else @click="removeFromPanier(article.id)">Retirer du panier</button>
+            <button @click="deleteArticle(article.id)">Supprimer</button>
+            <button @click="editArticle(article)">Modifier</button>
+          </div>
+        </div>
+        <p>{{ article.description }}</p>
+      </div>
+      <div class="article-content" v-else>
+        <div class="article-title">
+          <h2><input type="text" v-model="commentaries.name"> - <input type="number" v-model="commentaries.price"></h2>
+          <div>
+            <button @click="sendEditArticle()">Valider</button>
+            <button @click="abortEditArticle()">Annuler</button>
+          </div>
+        </div>
+        <p><textarea v-model="commentaries.description"></textarea></p>
+      </div>
+    </article>
+    <button @click="showForm = !showForm">Ajouter un article</button>
+    <add-article
+      :show="showForm"
+      @create-article="addArticle"
+    ></add-article>
+  </div>
+</template>
+
+<script>
+const AddArticle = window.httpVueLoader('./components/AddArticle.vue')
+
+module.exports = {
+  components: {
+    AddArticle
+  },
+  props: {
+    articles: { type: Array, default: [] },
+    panier: { type: Object }
+  },
+  data () {
+    return {
+      showForm: false,
+      commentaries: {
+        id: -1,
+        name: '',
+        description: '',
+        price: 0
+      }
+    }
+  },
+  methods: {
+    isInPanier (articleId) {
+      return !!this.panier.articles.find(a => a.id === articleId)
+    },
+    addToPanier (articleId) {
+      this.$emit('add-to-panier', articleId)
+    },
+    removeFromPanier (articleId) {
+      this.$emit('remove-from-panier', articleId)
+    },
+    addArticle (article) {
+      this.$emit('add-article', article)
+    },
+    deleteArticle (articleId) {
+      this.$emit('delete-article', articleId)
+    },
+    editArticle (article) {
+      this.commentaries.id = article.id
+      this.commentaries.name = article.name
+      this.commentaries.description = article.description
+      this.commentaries.price = article.price
+    },
+    sendEditArticle () {
+      this.$emit('update-article', this.commentaries)
+      this.abortEditArticle()
+    },
+    abortEditArticle () {
+      this.commentaries = {
+        id: -1,
+        name: '',
+        description: '',
+        price: 0
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+article {
+  display: flex;
+}
+
+.article-img {
+  flex: 1;
+}
+
+.article-img div {
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+}
+
+.article-content {
+  flex: 3;
+}
+
+.article-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+textarea {
+  width: 100%;
+}
+</style>
