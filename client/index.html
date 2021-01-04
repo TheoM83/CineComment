@@ -10,45 +10,6 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
         <style>
-          body {
-              background-color: beige;
-              font-family: Comic Sans MS, Comic Sans, cursive;
-              font-weight: bold;
-          }
-  
-          header {
-              box-shadow: 5px 5px 8px 3px blue;
-              text-decoration: underline;
-              background-color: powderblue;
-              padding: 10px;
-              font-family: Brush Script MT, Brush Script Std, cursive;
-              text-shadow: 2px 2px 5px blue;
-              font-size: 20px;
-          }
-  
-          #align {
-              display: inline;
-          }
-  
-          nav {
-              float: right;
-          }
-  
-          .link {
-              color: black;
-              background-color: skyblue;
-              padding: 3px;
-          }
-  
-          h2 {
-              text-decoration: underline;
-          }
-  
-          button {
-              font-weight: bold;
-              font-size: 12px;
-          }
-  
       </style>
     </head>
     <body>
@@ -56,27 +17,25 @@
           <header>
             <h1 id="align">À la bonne franquette</h1>
             <nav id="align">
-              <router-link class="link" to='/home'>Home</router-link>
+              <router-link class="link" to='/'>Accueil</router-link>
               <router-link class="link" to='/films'>Films</router-link>
-              <router-link class="link" to='/register'>Register</router-link>
-              <router-link class="link" to='/login'>Login</router-link>
+              <router-link class="link" to='/register'>Inscription</router-link>
+              <router-link class="link" to='/login'>Connexion</router-link>
             </nav>
           </header>
           <br>
           <main>
             <router-view
-              :articles="articles"
-              :panier="panier"
+              :commentaries="commentaries"
+              :films="films"
               :connected="connected"
-              @add-to-panier="addToPanier"
-              @remove-from-panier="removeFromPanier"
-              @change-quantity="changeQuantity"
-              @add-article="addArticle"
-              @delete-article="deleteArticle"
-              @update-article="updateArticle"
+              @add-comment="addComment"
+              @add-film="addFilm"
               @register="register"
               @login="login"
               @who-am-i="whoAmI"
+              @delete-commentary="deleteCommentary"
+              @delete-film="deleteFilm"
             ></router-view>
           </main>
         </div>

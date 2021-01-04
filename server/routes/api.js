@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const articles = require('../data/articles.js')
 const bcrypt = require('bcrypt')
 const { Client } = require('pg')
 const cookieParser = require('cookie-parser')
@@ -8,20 +7,13 @@ const cookieParser = require('cookie-parser')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'monMotdePasse',
-  database: 'TP5'
+  password: 'root',
+  database: 'CineComm'
  })
 
 client.connect()
 
-class Panier {
-  constructor () {
-    this.createdAt = new Date()
-    this.updatedAt = new Date()
-    this.articles = []
-  }
-}
-
+//CONNECTIONS
 router.get('/me', async (req, res) => {
   if (typeof req.session.userId === 'undefined'){
     res.json(-1)
@@ -45,7 +37,6 @@ router.post('/login', async (req, res) => {
   const id = await login(email, password)
   if (!(id === -1)){
     if (typeof req.session.userId === 'undefined'){
-      console.log("creating session")
       req.session.userId = id
     }
   }
@@ -57,7 +48,7 @@ router.post('/login', async (req, res) => {
 })
 
 async function add (email, password) {
-  const sql = "INSERT INTO users (email, password) VALUES ($1, $2)"
+  const sql = "INSERT INTO users (email, pass) VALUES ($1, $2)"
   const hash = await bcrypt.hash(password, 10)
   await client.query({
     text: sql,
@@ -72,11 +63,9 @@ async function check (email, password) {
     values: [email] // ici name et description ne sont pas concaténées à notre requête
   })
   if (r.rowCount === 0){
-    console.log("doesn t exist")
     add(email, password)
   }
   else {
-    console.log("exists")
   }
 }
 
@@ -87,194 +76,110 @@ async function login (email, password) {
     values: [email] // ici name et description ne sont pas concaténées à notre requête
   })
   if (r.rows[0]){
-    if (await bcrypt.compare(password, r.rows[0]['password'])){
-      console.log("match")
+    if (await bcrypt.compare(password, r.rows[0]['pass'])){
         return r.rows[0]['id']
     }
   }
   return -1
 }
 
-
-router.use((req, res, next) => {
-  // l'utilisateur n'est pas reconnu, lui attribuer un panier dans req.session
-  if (typeof req.session.panier === 'undefined') {
-    req.session.panier = new Panier()
-  }
-  next()
+//FILMS
+router.get('/films', async(req, res) => {
+  r = await getFilms()
+  return res.json(r.rows)
 })
 
-router.get('/panier', (req, res) => {
-  res.json(req.session.panier)
-})
-
-router.post('/panier', (req, res) => {
-  console.log('req.body', req.body)
-  const articleId = parseInt(req.body.articleId)
-  const quantity = parseInt(req.body.quantity)
-
-  if (isNaN(quantity) || quantity <= 0) {
-    res.status(400).json({ message: "You cannot add a quantity of 0 in your cart"})
-    return
-  }
-
-  const article = articles.find(article => article.id === articleId)
-
-  if(!article) {
-    res.status(404).json({ message: "The article does not exist"})
-    return
-  }
-
-  const articleInPanier = req.session.panier.articles.find(article => article.id === articleId)
-
-  if (articleInPanier) {
-    res.status(400).json({ message: "The article is already in your cart"})
-    return
-  }
-
-  const newArticle = {
-    id: articleId,
-    quantity
-  }
-
-  req.session.panier.articles.push(newArticle)
-
-  res.send(newArticle)
-})
-
-router.put('/panier/:articleId', (req, res) => {
-  const articleId = parseInt(req.params.articleId)
-  const quantity = parseInt(req.body.quantity)
-
-  if (isNaN(quantity) || quantity <= 0) {
-    res.status(400).json({ message: "You cannot add a quantity of 0 in your cart"})
-    return
-  }
-
-  const articleInPanier = req.session.panier.articles.find(article => article.id === articleId)
-
-  if (!articleInPanier) {
-    res.status(400).json({ message: "The article is not currently in your cart"})
-    return
-  }
-
-  articleInPanier.quantity = quantity
-  res.send()
-})
-
-router.delete('/panier/:articleId', (req, res) => {
-  const articleId = parseInt(req.params.articleId)
-
-  const articleInPanier = req.session.panier.articles.findIndex(article => article.id === articleId)
-
-  if (articleInPanier === -1) {
-    res.status(400).json({ message: "The article is not currently in your cart"})
-    return
-  }
-
-  req.session.panier.articles.splice(articleInPanier, 1)
-  res.send()
-})
-
-router.get('/articles', (req, res) => {
-  res.json(articles)
-})
-
-/**
- * Cette route crée un article.
- * WARNING: dans un vrai site, elle devrait être authentifiée et valider que l'utilisateur est bien autorisé
- * NOTE: lorsqu'on redémarre le serveur, l'article ajouté disparait
- *   Si on voulait persister l'information, on utiliserait une BDD (mysql, etc.)
- */
-router.post('/article', (req, res) => {
-  const name = req.body.name
-  const description = req.body.description
-  const image = req.body.image
-  const price = parseInt(req.body.price)
-
-  // vérification de la validité des données d'entrée
-  if (typeof name !== 'string' || name === '' ||
-      typeof description !== 'string' || description === '' ||
-      typeof image !== 'string' || image === '' ||
-      isNaN(price) || price <= 0) {
-    res.status(400).json({ message: 'bad request' })
-    return
-  }
-
-  const article = {
-    id: articles.length + 1,
-    name: name,
-    description: description,
-    image: image,
-    price: price
-  }
-  articles.push(article)
-  // on envoie l'article ajouté à l'utilisateur
-  res.json(article)
-})
-
-/**
- * Cette fonction fait en sorte de valider que l'article demandé par l'utilisateur
- * est valide. Elle est appliquée aux routes:
- * - GET /article/:articleId
- * - PUT /article/:articleId
- * - DELETE /article/:articleId
- * Comme ces trois routes ont un comportement similaire, on regroupe leurs fonctionnalités communes dans un middleware
- */
-function parseArticle (req, res, next) {
-  const articleId = parseInt(req.params.articleId)
-
-  // si articleId n'est pas un nombre (NaN = Not A Number), alors on s'arrête
-  if (isNaN(articleId)) {
-    res.status(400).json({ message: 'articleId should be a number' })
-    return
-  }
-  // on affecte req.articleId pour l'exploiter dans toutes les routes qui en ont besoin
-  req.articleId = articleId
-
-  const article = articles.find(a => a.id === req.articleId)
-  if (!article) {
-    res.status(404).json({ message: 'article ' + articleId + ' does not exist' })
-    return
-  }
-  // on affecte req.article pour l'exploiter dans toutes les routes qui en ont besoin
-  req.article = article
-  next()
+async function getFilms() {
+  const sql = "SELECT * FROM film ORDER BY titre"
+  const r = await client.query({
+    text: sql,
+  })
+  return r;
 }
 
-router.route('/article/:articleId')
-  /**
-   * Cette route envoie un article particulier
-   */
-  .get(parseArticle, (req, res) => {
-    // req.article existe grâce au middleware parseArticle
-    res.json(req.article)
+router.post('/film', async(req, res) => {
+  const titre = req.body.titre
+  const date = req.body.date
+  const genre = req.body.genre
+  const synopsis = req.body.synopsis
+  const image = req.body.image
+  r = await addFilm(titre,date,genre,synopsis,image)
+  return res.json(r.rows)
+})
+
+async function addFilm(titre,date,genre,synopsis,image) {
+  const sql = "INSERT INTO film (titre,date,genre,synopsis,image) VALUES ($1,$2,$3,$4,$5)"
+  const r = await client.query({
+    text: sql,
+    values: [titre,date,genre,synopsis,image]
   })
+  return r;
+}
 
-  /**
-   * Cette route modifie un article.
-   * WARNING: dans un vrai site, elle devrait être authentifiée et valider que l'utilisateur est bien autorisé
-   * NOTE: lorsqu'on redémarre le serveur, la modification de l'article disparait
-   *   Si on voulait persister l'information, on utiliserait une BDD (mysql, etc.)
-   */
-  .put(parseArticle, (req, res) => {
-    const name = req.body.name
-    const description = req.body.description
-    const image = req.body.image
-    const price = parseInt(req.body.price)
+router.delete('/film:filmId', async(req, res) => {
+  const idFilm = parseInt(req.params.filmId)
+  r = await deleteFilm(idFilm)
+  return res.json(r)
+})
 
-    req.article.name = name
-    req.article.description = description
-    req.article.image = image
-    req.article.price = price
-    res.send()
+async function deleteFilm(idFilm) {
+  const sql = "DELETE FROM avis WHERE idfilm = $1;"
+  const r = await client.query({
+    text: sql,
+    values: [idFilm]
   })
-
-  .delete(parseArticle, (req, res) => {
-    const index = articles.findIndex(a => a.id === req.articleId)
-
-    articles.splice(index, 1) // remove the article from the array
-    res.send()
+  const sql1 = "DELETE FROM film WHERE idfilm = $1;"
+  const r1 = await client.query({
+    text: sql1,
+    values: [idFilm]
   })
+  return r1;
+}
+
+//COMMENTARIES
+router.get('/commentaries', async(req, res) => {
+  r = await getCommentaries()
+  return res.json(r.rows)
+})
+
+async function getCommentaries() {
+  const sql = "SELECT idavis, id, email,  commentaires, titre, image FROM avis A inner join users U on (A.iduser = U.id) inner join film F on (F.idfilm = A.idfilm) ORDER BY titre"
+  const r = await client.query({
+    text: sql,
+  })
+  return r;
+}
+
+router.post('/commentary', async(req, res) => {
+  const userId = req.session.userId
+  const idFilm = req.body.idFilm
+  const Commentary = req.body.Commentary
+  r = await addCommentary(userId, idFilm, Commentary)
+  return res.json(r.rows)
+})
+
+async function addCommentary(userId, idFilm, Commentary) {
+  const sql = "INSERT INTO avis (idfilm, iduser, commentaires) VALUES ($1,$2,$3)"
+  const r = await client.query({
+    text: sql,
+    values: [idFilm, userId, Commentary]
+  })
+  return r;
+}
+
+router.delete('/commentary:commentaryId', async(req, res) => {
+  const idCommentary = parseInt(req.params.commentaryId)
+  r = await deleteCommentary(idCommentary)
+  return res.json(r)
+})
+
+async function deleteCommentary(idCommentary) {
+  const sql = "DELETE FROM avis WHERE idavis = $1;"
+  const r = await client.query({
+    text: sql,
+    values: [idCommentary]
+  })
+  return r;
+}
 
 module.exports = router

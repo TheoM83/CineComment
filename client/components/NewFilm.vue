@@ -1,0 +1,38 @@
+<template>
+    <form @submit.prevent="addFilm">
+        <h2>Nouveau Film à ajouter</h2>
+        <input type="text" v-model="newFilm.titre" placeholder="Nom du Film" required>
+        <input type="text" v-model="newFilm.date" placeholder="Date" required>
+        <input type="text" v-model="newFilm.genre" placeholder="Genre" required>
+        <textarea type="text" v-model="newFilm.synopsis" required></textarea>
+        <input type="text" v-model="newFilm.image" placeholder="Lien vers l'image">
+        <button type="submit">Ajouter</button>
+    </form>
+</template>
+ 
+<script>
+module.exports = {
+  props: {
+    film : null
+  },
+  data () {
+    return {
+        newFilm: {
+            titre: '',
+            date: '',
+            genre: '',
+            synopsis: '',
+            image: ''
+        }
+    }
+  },
+  methods: {
+    addFilm () {
+        this.$emit('add-film', this.newFilm)
+    },
+  }
+}
+</script>
+ 
+<style>
+</style>

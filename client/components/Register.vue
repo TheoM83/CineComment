@@ -32,31 +32,5 @@ module.exports = {
 }
 </script>
 
-<style scoped>
-article {
-  display: flex;
-}
-
-.article-img {
-  flex: 1;
-}
-
-.article-img div {
-  width: 100px;
-  height: 100px;
-  background-size: cover;
-}
-
-.article-content {
-  flex: 3;
-}
-
-.article-title {
-  display: flex;
-  justify-content: space-between;
-}
-
-textarea {
-  width: 100%;
-}
+<style>
 </style>

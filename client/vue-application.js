@@ -1,11 +1,13 @@
-const Home = window.httpVueLoader('./components/Home.vue')
-const Panier = window.httpVueLoader('./components/Panier.vue')
 const Register = window.httpVueLoader('./components/Register.vue')
 const Login = window.httpVueLoader('./components/Login.vue')
+const Home = window.httpVueLoader('./components/Home.vue')
+const Films = window.httpVueLoader('./components/Films.vue')
+const NewComment = window.httpVueLoader('./components/NewComment.vue')
+const NewFilm = window.httpVueLoader('./components/NewFilm.vue')
 
 const routes = [
   { path: '/', component: Home },
-  { path: '/panier', component: Panier },
+  { path: '/films', component: Films },
   { path: '/login', component: Login },
   { path: '/register', component: Register }
 ]
@@ -19,18 +21,16 @@ var app = new Vue({
   el: '#app',
   data: {
     connected : null,
-    articles: [],
-    panier: {
-      createdAt: null,
-      updatedAt: null,
-      articles: []
-    }
+    films: [],
+    commentaries : []
   },
   async mounted () {
-    const res = await axios.get('/api/articles')
-    this.articles = res.data
-    const res2 = await axios.get('/api/panier')
-    this.panier = res2.data
+    const res1 = await axios.get('/api/films')
+    this.films = res1.data
+
+    const res2 = await axios.get('/api/commentaries')
+    this.commentaries = res2.data
+
     const res3 = await axios.get('/api/me')
     this.connected = res3.data
   },
@@ -51,36 +51,21 @@ var app = new Vue({
       const res1 = await axios.get('/api/me')
       this.connected = res1.data
     },
-    async addToPanier (articleId) {
-      const res = await axios.post('/api/panier', { articleId, quantity: 1 })
-      this.panier.articles.push(res.data)
+    async addComment (comment) {
+      await axios.post('/api/commentary', { idFilm : comment.id , Commentary : comment.commentaire})
+      document.location.reload();
     },
-    async removeFromPanier (articleId) {
-      const res = await axios.delete('/api/panier/' + articleId)
-      const idx = this.panier.articles.findIndex(a => a.id === articleId)
-      this.panier.articles.splice(idx, 1)
+    async addFilm (film) {
+      await axios.post('/api/film', {titre : film.titre ,date : film.date ,genre : film.genre ,synopsis : film.synopsis ,image : film.image })
+      document.location.reload();
     },
-    async changeQuantity ({ articleId, quantity }) {
-      const res = await axios.put('/api/panier/' + articleId, { quantity })
-      const article = this.panier.articles.find(a => a.id === articleId)
-      article.quantity = quantity
+    async deleteCommentary (idCommentary) {
+      await axios.delete('/api/commentary'+ idCommentary)
+      document.location.reload();
     },
-    async addArticle (article) {
-      const res = await axios.post('/api/article', article)
-      this.articles.push(res.data)
-    },
-    async updateArticle (newArticle) {
-      await axios.put('/api/article/' + newArticle.id, newArticle)
-      const article = this.articles.find(a => a.id === newArticle.id)
-      article.name = newArticle.name
-      article.description = newArticle.description
-      article.image = newArticle.image
-      article.price = newArticle.price
-    },
-    async deleteArticle (articleId) {
-      await axios.delete('/api/article/' + articleId)
-      const index = this.articles.findIndex(a => a.id === articleId)
-      this.articles.splice(index, 1)
+    async deleteFilm (idFilm) {
+      await axios.delete('/api/film'+ idFilm)
+      document.location.reload();
     }
   }
 })
