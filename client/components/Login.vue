@@ -30,11 +30,9 @@ module.exports = {
   },
   async mounted () {
     this.$emit('who-am-i')
-    console.log(this.connected)
   },
   methods: {
     login () {
-        console.log(this.credentials)
         this.$emit('login', this.credentials)
     },
 

@@ -7,7 +7,11 @@ const cookieParser = require('cookie-parser')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
+<<<<<<< HEAD
   password: 'FCMA77127',
+=======
+  password: 'root',
+>>>>>>> main
   database: 'projetWeb'
  })
 
@@ -25,9 +29,10 @@ router.get('/me', async (req, res) => {
 })
 
 router.post('/register', async(req, res) => {
+  const pseudo = req.body.pseudo
   const email = req.body.email
   const password = req.body.password
-  await check(email, password)
+  await check(pseudo, email, password)
   res.send()
 })
 
@@ -47,23 +52,28 @@ router.post('/login', async (req, res) => {
   res.json(id)
 })
 
+<<<<<<< HEAD
 async function add (email, password) {
   const sql = "INSERT INTO users (email, passwords) VALUES ($1, $2)"
+=======
+async function add (pseudo, email, password) {
+  const sql = "INSERT INTO users (pseudo, email, passwords) VALUES ($1, $2, $3)"
+>>>>>>> main
   const hash = await bcrypt.hash(password, 10)
   await client.query({
     text: sql,
-    values: [email, hash] // ici name et description ne sont pas concaténées à notre requête
+    values: [pseudo, email, hash] // ici name et description ne sont pas concaténées à notre requête
   })
 }
 
-async function check (email, password) {
+async function check (pseudo, email, password) {
   const sql = "SELECT * FROM users WHERE email=$1"
   const r = await client.query({
     text: sql,
     values: [email] // ici name et description ne sont pas concaténées à notre requête
   })
   if (r.rowCount === 0){
-    add(email, password)
+    add(pseudo, email, password)
   }
   else {
   }
@@ -143,7 +153,11 @@ router.get('/commentaries', async(req, res) => {
 })
 
 async function getCommentaries() {
+<<<<<<< HEAD
   const sql = "SELECT idavis, iduser, pseudo,  commentaires, titre, image FROM avis A inner join users U on (A.iduser = U.iduser) inner join film F on (F.idfilm = A.idfilm) ORDER BY titre"
+=======
+  const sql = "SELECT idavis, U.idUser, email,  commentaires, F.idfilm, titre, image FROM avis A inner join users U on (A.iduser = U.iduser) inner join film F on (F.idfilm = A.idfilm) ORDER BY titre"
+>>>>>>> main
   const r = await client.query({
     text: sql,
   })
