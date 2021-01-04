@@ -8,7 +8,7 @@ const client = new Client({
   user: 'postgres',
   host: 'localhost',
   password: 'root',
-  database: 'CineComm'
+  database: 'projetWeb'
  })
 
 client.connect()
@@ -25,9 +25,10 @@ router.get('/me', async (req, res) => {
 })
 
 router.post('/register', async(req, res) => {
+  const pseudo = req.body.pseudo
   const email = req.body.email
   const password = req.body.password
-  await check(email, password)
+  await check(pseudo, email, password)
   res.send()
 })
 
@@ -47,23 +48,23 @@ router.post('/login', async (req, res) => {
   res.json(id)
 })
 
-async function add (email, password) {
-  const sql = "INSERT INTO users (email, pass) VALUES ($1, $2)"
+async function add (pseudo, email, password) {
+  const sql = "INSERT INTO users (pseudo, email, passwords) VALUES ($1, $2, $3)"
   const hash = await bcrypt.hash(password, 10)
   await client.query({
     text: sql,
-    values: [email, hash] // ici name et description ne sont pas concaténées à notre requête
+    values: [pseudo, email, hash] // ici name et description ne sont pas concaténées à notre requête
   })
 }
 
-async function check (email, password) {
+async function check (pseudo, email, password) {
   const sql = "SELECT * FROM users WHERE email=$1"
   const r = await client.query({
     text: sql,
     values: [email] // ici name et description ne sont pas concaténées à notre requête
   })
   if (r.rowCount === 0){
-    add(email, password)
+    add(pseudo, email, password)
   }
   else {
   }
@@ -76,8 +77,8 @@ async function login (email, password) {
     values: [email] // ici name et description ne sont pas concaténées à notre requête
   })
   if (r.rows[0]){
-    if (await bcrypt.compare(password, r.rows[0]['pass'])){
-        return r.rows[0]['id']
+    if (await bcrypt.compare(password, r.rows[0]['passwords'])){
+        return r.rows[0]['iduser']
     }
   }
   return -1
@@ -143,7 +144,7 @@ router.get('/commentaries', async(req, res) => {
 })
 
 async function getCommentaries() {
-  const sql = "SELECT idavis, id, email,  commentaires, titre, image FROM avis A inner join users U on (A.iduser = U.id) inner join film F on (F.idfilm = A.idfilm) ORDER BY titre"
+  const sql = "SELECT idavis, U.idUser, email,  commentaires, F.idfilm, titre, image FROM avis A inner join users U on (A.iduser = U.iduser) inner join film F on (F.idfilm = A.idfilm) ORDER BY titre"
   const r = await client.query({
     text: sql,
   })

@@ -36,7 +36,9 @@ var app = new Vue({
   },
   methods: {
     async register (credentials) {
-      const res = await axios.post('/api/register', { email: credentials.email  , password: credentials.password})
+      console.log("XXXX")
+      console.log(credentials)
+      const res = await axios.post('/api/register', { pseudo : credentials.pseudo, email: credentials.email  , password: credentials.password})
       this.$router.push('/login')
     },
     async whoAmI () {
@@ -44,7 +46,7 @@ var app = new Vue({
       this.connected = res.data
     },
     async login (credentials) {
-      const res = await axios.post('/api/login', { email: credentials.email  , password: credentials.password})
+      const res = await axios.post('/api/login', {  email: credentials.email  , password: credentials.password})
       if(res.data) {
         this.$router.push('/')
       }
