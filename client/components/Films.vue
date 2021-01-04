@@ -1,9 +1,16 @@
 <template>
 <div>
-  <p>>Films</p>
+  <h1>Films</h1>
   <ol>
   <li v-for="film in films" :key="film.id">
-    {{ film }}
+    {{ film.titre }} {{'('+film.année+')'}}
+    <br><br>
+    <div class="films-img">
+      <div :style="{ backgroundImage: 'url(' + film.image + ')' }">
+      </div>
+      {{film.synopsis}}
+    </div>
+    <br>
     <button v-on:click="deleteFilm(film.idfilm)">Delete</button>
     <div id="example">
   <new-comment
@@ -27,7 +34,7 @@ module.exports = {
     NewFilm
   },
   props: {
-    films : null
+    films : { type: Array, default: [] }
   },
   data () {
     return {
@@ -49,4 +56,21 @@ module.exports = {
 </script>
 
 <style>
+films {
+  display: flex;
+}
+
+.films-img {
+  flex: 1;
+}
+
+.films-img div {
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+}
+
+.films-content {
+  flex: 3;
+}
 </style>
