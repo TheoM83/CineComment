@@ -10,6 +10,25 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
         <style>
+          header {
+            box-shadow: 5px 5px 8px 3px blue;
+            text-decoration: underline;
+            background-color: powderblue;
+            padding: 10px;
+            font-family: rial Narrow, sans-serif;
+            text-shadow: 2px 2px 5px blue;
+            font-size: 20px;
+            text-align: center;
+          }
+
+          #align {
+            display: inline;
+          }
+        
+          .link {
+            color: black;
+            padding: 10px;
+          }
       </style>
     </head>
     <body>
@@ -35,6 +54,7 @@
               @who-am-i="whoAmI"
               @delete-commentary="deleteCommentary"
               @delete-film="deleteFilm"
+              @comment="comment"
             ></router-view>
           </main>
         </div>

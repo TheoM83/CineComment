@@ -1,6 +1,6 @@
 <template>
 <div>
-  <p>>Commentaires</p>
+  <p>Commentaires</p>
   <ol>
   <li v-for="commentary in commentaries" :key="commentary.id">
     {{ commentary }}

@@ -1,25 +1,23 @@
 <template>
 <div>
   <h1>Films</h1>
-  <ol>
   <li v-for="film in films" :key="film.id">
-    {{ film.titre }} {{'('+film.année+')'}}
-    <br><br>
+    <h2 class="title">{{ film.titre }}  {{'('+film.année+')'}}</h2>
     <div class="films-img">
       <div :style="{ backgroundImage: 'url(' + film.image + ')' }">
       </div>
-      {{film.synopsis}}
     </div>
     <br>
-    <button v-on:click="deleteFilm(film.idfilm)">Delete</button>
-    <div id="example">
-  <new-comment
-      :film="film"
-      @add-comment="addComment"
-    ></new-comment>
-  </div>
+    {{film.synopsis}}
+    <br><br>
+    <button class="delete" v-on:click="deleteFilm(film.idfilm)">Supprimer</button>
+    <button class="comment" v-on:click="comment(film.idfilm)">Commenter</button>
+    <new-comment
+    :film="film"
+    @add-comment="addComment"
+  ></new-comment>
+  <br>
   </li>
-  </ol>
   <new-film
       @add-film="addFilm"
     ></new-film>
@@ -50,6 +48,9 @@ module.exports = {
     },
     deleteFilm(idfilm){
         this.$emit('delete-film', idfilm)
+    },
+    comment(idfilm){
+        this.$emit('comment', idfilm);
     }
   }
 }
@@ -65,12 +66,40 @@ films {
 }
 
 .films-img div {
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   background-size: cover;
 }
 
 .films-content {
   flex: 3;
 }
+
+.title {
+  text-decoration: underline;
+}
+
+h1 {
+  text-decoration: underline;
+  text-align: center;
+  padding: 3px;
+}
+
+li {
+  list-style-type: circle;
+}
+
+button {
+  font-weight: bolder;
+  font-size: 15px;
+}
+
+.delete {
+  background-color: tomato;
+}
+
+.comment {
+  background-color: cadetblue;
+}
+
 </style>

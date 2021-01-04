@@ -1,7 +1,7 @@
 <template>
   <div>
     <form @submit.prevent="login" v-if="connected === -1">
-    <h2>Connexion</h2>
+    <h1>Connexion</h1>
         <input type="email" v-model="credentials.email" placeholder="Email" required>
         <input type="password" v-model="credentials.password" placeholder="Password" required>
         <button type="submit">Se Connecter</button>

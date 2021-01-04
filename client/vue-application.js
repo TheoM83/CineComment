@@ -68,6 +68,9 @@ var app = new Vue({
     async deleteFilm (idFilm) {
       await axios.delete('/api/film'+ idFilm)
       document.location.reload();
+    },
+    async comment (idFilm) {
+      this.$router.push('/NewComment')
     }
   }
 })
