@@ -1,15 +1,14 @@
 <template>
 <div>
   <h1>Films</h1>
+  <ol>
   <li v-for="film in films" :key="film.id">
     <h2 class="title">{{ film.titre }}  {{'('+film.année+')'}}</h2>
     <div class="films-img">
       <div :style="{ backgroundImage: 'url(' + film.image + ')' }">
       </div>
     </div>
-    <br>
-    {{film.synopsis}}
-    <br><br>
+    <p>{{film.synopsis}}</p>
     <button class="delete" v-on:click="deleteFilm(film.idfilm)">Supprimer</button>
     <button class="comment" v-on:click="comment(film.idfilm)">Commenter</button>
     <new-comment
@@ -18,6 +17,7 @@
   ></new-comment>
   <br>
   </li>
+  </ol>
   <new-film
       @add-film="addFilm"
     ></new-film>
@@ -57,6 +57,7 @@ module.exports = {
 </script>
 
 <style>
+
 films {
   display: flex;
 }
@@ -86,7 +87,17 @@ h1 {
 }
 
 li {
-  list-style-type: circle;
+  list-style: none;
+}
+
+li:before {
+  content: '';
+  background: url('https://www.icone-gif.com/gif/cinema/clap/clap-gif-003.gif');
+  position: absolute;
+  width: 3em;
+  height: 3.5em;
+  margin-left: -3.5em;
+  margin-top: -1em;
 }
 
 button {
