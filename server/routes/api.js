@@ -7,8 +7,8 @@ const cookieParser = require('cookie-parser')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'root',
-  database: 'CineComm'
+  password: 'FCMA77127',
+  database: 'projetWeb'
  })
 
 client.connect()
@@ -48,7 +48,7 @@ router.post('/login', async (req, res) => {
 })
 
 async function add (email, password) {
-  const sql = "INSERT INTO users (email, pass) VALUES ($1, $2)"
+  const sql = "INSERT INTO users (email, passwords) VALUES ($1, $2)"
   const hash = await bcrypt.hash(password, 10)
   await client.query({
     text: sql,
@@ -76,8 +76,8 @@ async function login (email, password) {
     values: [email] // ici name et description ne sont pas concaténées à notre requête
   })
   if (r.rows[0]){
-    if (await bcrypt.compare(password, r.rows[0]['pass'])){
-        return r.rows[0]['id']
+    if (await bcrypt.compare(password, r.rows[0]['passwords'])){
+        return r.rows[0]['iduser']
     }
   }
   return -1
@@ -108,7 +108,7 @@ router.post('/film', async(req, res) => {
 })
 
 async function addFilm(titre,date,genre,synopsis,image) {
-  const sql = "INSERT INTO film (titre,date,genre,synopsis,image) VALUES ($1,$2,$3,$4,$5)"
+  const sql = "INSERT INTO film (titre,année,genre,synopsis,image) VALUES ($1,$2,$3,$4,$5)"
   const r = await client.query({
     text: sql,
     values: [titre,date,genre,synopsis,image]
@@ -143,7 +143,7 @@ router.get('/commentaries', async(req, res) => {
 })
 
 async function getCommentaries() {
-  const sql = "SELECT idavis, id, email,  commentaires, titre, image FROM avis A inner join users U on (A.iduser = U.id) inner join film F on (F.idfilm = A.idfilm) ORDER BY titre"
+  const sql = "SELECT idavis, iduser, pseudo,  commentaires, titre, image FROM avis A inner join users U on (A.iduser = U.iduser) inner join film F on (F.idfilm = A.idfilm) ORDER BY titre"
   const r = await client.query({
     text: sql,
   })
