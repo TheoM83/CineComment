@@ -1,11 +1,11 @@
 <template>
 <div>
   <h1>Commenter</h1>
+  <h2>{{ film.titre }}</h2>
   <div class="films-img">
     <div :style="{ backgroundImage: 'url(' + film.image + ')' }">
     </div>
   </div>
-  <h2>{{ film.titre }}</h2>
   <textarea type="text" v-model="comment.commentaire" placeholder="Commentaire" required></textarea>
   <button type="submit">Ajouter</button>
 </div>
@@ -50,5 +50,9 @@ films {
 
 .films-content {
   flex: 3;
+}
+
+h2 {
+  text-decoration: underline;
 }
 </style>

@@ -86,18 +86,15 @@ h1 {
   padding: 3px;
 }
 
-li {
-  list-style: none;
+ol {
+  margin: 10px;
 }
 
-li:before {
-  content: '';
-  background: url('https://www.icone-gif.com/gif/cinema/clap/clap-gif-003.gif');
-  position: absolute;
-  width: 3em;
-  height: 3.5em;
-  margin-left: -3.5em;
-  margin-top: -1em;
+li {
+  margin-left: -40px;
+  list-style: none;
+  border: 2px solid black;
+  padding: .5em;
 }
 
 button {
