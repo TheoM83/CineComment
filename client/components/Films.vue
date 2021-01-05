@@ -12,11 +12,7 @@
     <p>{{film.synopsis}}</p>
     <button class="delete" v-on:click="deleteFilm(film.idfilm)">Supprimer</button>
     <button class="comment" v-on:click="comment(film.idfilm)">Commenter</button>
-    <new-comment
-    :film="film"
-    @add-comment="addComment"
-  ></new-comment>
-  <br>
+  <br><br>
     </div>
   <br>
   </li>

@@ -10,6 +10,12 @@
   <textarea type="text" v-model="comment.commentaire" placeholder="Commentaire" required></textarea>
   <button type="submit">Ajouter</button>
 </div>
+
+  <!-- <new-comment
+    :film="film"
+    @add-comment="addComment"
+  ></new-comment> -->
+
 </template>
  
 <script>
