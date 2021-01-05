@@ -3,6 +3,7 @@
   <h1>Films</h1>
   <ol>
   <li v-for="film in films" :key="film.id">
+    <div id="cadre">
     <h2 class="title">{{ film.titre }}  {{'('+film.année+')'}}</h2>
     <div class="films-img">
       <div :style="{ backgroundImage: 'url(' + film.image + ')' }">
@@ -15,6 +16,8 @@
     :film="film"
     @add-comment="addComment"
   ></new-comment>
+  <br>
+    </div>
   <br>
   </li>
   </ol>
@@ -90,11 +93,15 @@ ol {
   margin: 10px;
 }
 
+#cadre {
+  border: 2px solid black;
+  padding: .5em;
+}
+
 li {
   margin-left: -40px;
   list-style: none;
-  border: 2px solid black;
-  padding: .5em;
+  
 }
 
 button {
