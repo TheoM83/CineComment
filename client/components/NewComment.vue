@@ -6,6 +6,7 @@
     <div :style="{ backgroundImage: 'url(' + film.image + ')' }">
     </div>
   </div>
+  <br>
   <textarea type="text" v-model="comment.commentaire" placeholder="Commentaire" required></textarea>
   <button type="submit">Ajouter</button>
 </div>
@@ -18,7 +19,6 @@ module.exports = {
   },
   data () {
     return {
-      showForm: false,
        comment: {
             id : this.film.idfilm,
             commentaire : ''
