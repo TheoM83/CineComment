@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'FCMA77127',
+  password: 'root',
   database: 'projetWeb'
  })
 
@@ -84,6 +84,37 @@ async function login (email, password) {
   return -1
 }
 
+router.post('/profileUsr', async(req, res) => {
+  const id = req.body.id
+  const pseudo = req.body.pseudo
+  await updatePseudo(id, pseudo)
+  res.send()
+})
+
+async function updatePseudo(id, pseudo) {
+  const sql = "UPDATE users SET pseudo = $2 WHERE iduser = $1"
+  const r = await client.query({
+    text: sql,
+    values: [id, pseudo]
+  })
+}
+
+router.post('/profileMDP', async(req, res) => {
+  const id = req.body.id
+  const pass = req.body.mdp
+  await updatePass(id, pass)
+  res.send()
+})
+
+async function updatePass(id, pass) {
+  const hash = await bcrypt.hash(pass, 10)
+  const sql = "UPDATE users SET passwords = $2 WHERE iduser = $1"
+  const r = await client.query({
+    text: sql,
+    values: [id, hash]
+  })
+}
+
 //FILMS
 router.get('/films', async(req, res) => {
   r = await getFilms()
@@ -144,12 +175,29 @@ router.get('/commentaries', async(req, res) => {
 })
 
 async function getCommentaries() {
-  const sql = "SELECT idavis, U.idUser, email,  commentaires, F.idfilm, titre, image FROM avis A inner join users U on (A.iduser = U.iduser) inner join film F on (F.idfilm = A.idfilm) ORDER BY titre"
+  const sql = "SELECT A.idavis, U.idUser, U.email, U.pseudo,  A.commentaires, F.idfilm, F.titre, F.image ,Count(V.idvoteavis) AS COUNT FROM avis A LEFT OUTER JOIN voteavis V ON V.idavis = A.idavis inner join users U on A.iduser = U.iduser inner join film F on F.idfilm=A.idfilm GROUP BY A.idavis, U.iduser, F.idfilm order by Count(V.idvoteavis) DESC "
   const r = await client.query({
     text: sql,
   })
   return r;
 }
+
+router.get('/commentariesLikes', async(req, res) => {
+  const id = req.session.userId
+  r = await getLikes(id)
+  console.log(r.rows)
+  return res.json(r.rows)
+})
+
+async function getLikes(id) {
+  const sql = "SELECT idavis from voteavis where iduser = $1"
+  const r = await client.query({
+    text: sql,
+    values: [id]
+  })
+  return r;
+}
+
 
 router.post('/commentary', async(req, res) => {
   const userId = req.session.userId
@@ -182,5 +230,39 @@ async function deleteCommentary(idCommentary) {
   })
   return r;
 }
+
+router.post('/commentaryL', async(req, res) => {
+  const idCommentary = req.body.idCommentary
+  const idUser = req.body.idUser
+  r = await addCommentaryLike(idCommentary, idUser)
+  return res.json(r)
+})
+
+async function addCommentaryLike(idCommentary, idUser) {
+  const sql = "Insert into voteavis(idavis, iduser) values ($1,$2);"
+  const r = await client.query({
+    text: sql,
+    values: [idCommentary, idUser]
+  })
+  return r;
+}
+
+router.post('/commentaryD', async(req, res) => {
+  const idCommentary = req.body.idCommentary
+  const idUser = req.body.idUser
+  r = await removeCommentaryLike(idCommentary, idUser)
+  return res.json(r)
+})
+
+async function removeCommentaryLike(idCommentary, idUser) {
+  const sql = "DELETE FROM voteavis WHERE idavis = $1 and iduser = $2;"
+  const r = await client.query({
+    text: sql,
+    values: [idCommentary, idUser]
+  })
+  return r;
+}
+
+
 
 module.exports = router

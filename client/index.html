@@ -39,6 +39,7 @@
               <router-link class="link" to='/films'>Films</router-link>
               <router-link class="link" to='/register'>Inscription</router-link>
               <router-link class="link" to='/login'>Connexion</router-link>
+              <router-link class="link" to='/profile'>Profil</router-link>
             </nav>
           </header>
           <br>
@@ -47,14 +48,19 @@
               :commentaries="commentaries"
               :films="films"
               :connected="connected"
+              :likedcomms="likedcomms"
               @add-comment="addComment"
               @add-film="addFilm"
               @register="register"
               @login="login"
               @who-am-i="whoAmI"
               @delete-commentary="deleteCommentary"
+              @like-commentary="likeCommentary"
+              @dislike-commentary="dislikeCommentary"
               @delete-film="deleteFilm"
               @comment="comment"
+              @update-mdp="updateMDP"
+              @update-pseudo="updatePseudo"
             ></router-view>
           </main>
         </div>

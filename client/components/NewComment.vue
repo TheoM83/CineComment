@@ -1,21 +1,16 @@
 <template>
 <div>
   <h1>Commenter</h1>
-  <h2>{{ film.titre }}</h2>
   <div class="films-img">
     <div :style="{ backgroundImage: 'url(' + film.image + ')' }">
     </div>
   </div>
-  <br>
+  <h2>{{ film.titre }}</h2>
+  <form @submit.prevent="addComment">
   <textarea type="text" v-model="comment.commentaire" placeholder="Commentaire" required></textarea>
   <button type="submit">Ajouter</button>
+  </form>
 </div>
-
-  <!-- <new-comment
-    :film="film"
-    @add-comment="addComment"
-  ></new-comment> -->
-
 </template>
  
 <script>
@@ -25,6 +20,7 @@ module.exports = {
   },
   data () {
     return {
+      showForm: false,
        comment: {
             id : this.film.idfilm,
             commentaire : ''
@@ -56,9 +52,5 @@ films {
 
 .films-content {
   flex: 3;
-}
-
-h2 {
-  text-decoration: underline;
 }
 </style>

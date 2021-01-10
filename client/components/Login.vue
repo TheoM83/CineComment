@@ -41,10 +41,10 @@ module.exports = {
     },
 
     async isConnected(){
-        if (this.connected == -1) {
-          return false
+        if (this.connected > 0) {
+          return true
         }
-        return true
+        return false
     }
   }
 }

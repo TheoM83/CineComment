@@ -1,31 +1,48 @@
 <template>
 <div>
+  <div v-show="!addingFilm">
   <h1>Films</h1>
   <ol>
+    
+
+    
   <li v-for="film in films" :key="film.id">
-    <div id="cadre">
-    <h2 class="title">{{ film.titre }}  {{'('+film.année+')'}}</h2>
-    <div class="films-img">
-      <div :style="{ backgroundImage: 'url(' + film.image + ')' }">
+      <h2 v-show="displayFilms()" class="title">{{ film.titre }}  {{'('+film.année+')'}}</h2>
+      <div v-show="displayFilms()" class="films-img">
+        <div :style="{ backgroundImage: 'url(' + film.image + ')' }">
+        </div>
       </div>
+    <p v-show="displayFilms()" >{{film.synopsis}}</p>
+    <button v-show="displayFilms()" class="delete" v-on:click="deleteFilm(film.idfilm)">Supprimer</button>
+    <button v-show="displayFilms()" class="comment" v-on:click="setId(film.idfilm)">Commenter</button>
+    <div v-show="displayComment(film.idfilm)">
+      <button class="retour" v-on:click="setId(-1)">Retour</button>
+      <new-comment 
+    :film="film"
+    @add-comment="addComment"
+  ></new-comment>
     </div>
-    <p>{{film.synopsis}}</p>
-    <button class="delete" v-on:click="deleteFilm(film.idfilm)">Supprimer</button>
-    <button class="comment" v-on:click="comment(film.idfilm)">Commenter</button>
-  <br><br>
-    </div>
+    
   <br>
   </li>
   </ol>
-  <new-film
-      @add-film="addFilm"
+  <button v-on:click="addingFilm = !addingFilm" >Ajouter film</button>
+  </div>
+  <div v-show="addingFilm">
+  <button v-on:click="addingFilm = !addingFilm" >retour</button>
+  <new-film 
+      @add-film="addFilm" v-show="displayFilms()"
     ></new-film>
+  </div>
 </div>
 </template>
 
 <script>
 
 module.exports = {
+  props: {
+      connected: Number
+  },
   components: {
     NewComment,
     NewFilm
@@ -35,7 +52,8 @@ module.exports = {
   },
   data () {
     return {
-      showForm: false
+      commentId: -1,
+      addingFilm: false
     }
   },
   methods: {
@@ -50,6 +68,27 @@ module.exports = {
     },
     comment(idfilm){
         this.$emit('comment', idfilm);
+    },
+    displayComment(filmId){
+      if (this.commentId === filmId){
+        return true
+      }
+      return false
+    },
+    displayFilms(){
+      if (this.commentId === -1){
+        return true
+      }
+      return false
+    },
+    setId(idfilm){
+      this.commentId = idfilm
+    },
+    async isConnected(){
+        if (this.connected > 0) {
+          return true
+        }
+        return false
     }
   }
 }
@@ -85,19 +124,17 @@ h1 {
   padding: 3px;
 }
 
-ol {
-  margin: 10px;
-}
-
-#cadre {
-  border: 2px solid black;
-  padding: .5em;
-}
-
 li {
-  margin-left: -40px;
   list-style: none;
-  
+}
+
+li:before {
+  content: '';
+  position: absolute;
+  width: 3em;
+  height: 3.5em;
+  margin-left: -3.5em;
+  margin-top: -1em;
 }
 
 button {
