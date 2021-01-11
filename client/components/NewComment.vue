@@ -53,8 +53,4 @@ films {
 .films-content {
   flex: 3;
 }
-
-h2 {
-  text-align: left;
-}
 </style>

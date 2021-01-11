@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="addFilm">
-        <h2>Nouveau film à ajouter :</h2>
+        <h1>Nouveau film à ajouter :</h1>
         <input type="text" v-model="newFilm.titre" placeholder="Nom du Film" required>
         <input type="text" v-model="newFilm.date" placeholder="Date" required>
         <input type="text" v-model="newFilm.genre" placeholder="Genre" required>
@@ -35,9 +35,4 @@ module.exports = {
 </script>
  
 <style>
-h2 {
-  text-decoration: underline;
-  text-align: center;
-  padding: 3px;
-}
 </style>

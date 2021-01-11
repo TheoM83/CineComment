@@ -84,12 +84,6 @@ module.exports = {
   text-decoration: underline;
 }
 
-h1 {
-  text-decoration: underline;
-  text-align: center;
-  padding: 3px;
-}
-
 #cadre {
   border: 2px solid black;
   padding: .5em;
@@ -105,11 +99,6 @@ h1 {
 
 .dislike {
   background-color:orange;
-}
-
-button {
-  font-weight: bolder;
-  font-size: 15px;
 }
 
 li {

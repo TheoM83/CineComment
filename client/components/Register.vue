@@ -35,7 +35,4 @@ module.exports = {
 </script>
 
 <style>
-form {
-  text-align: center;
-}
 </style>

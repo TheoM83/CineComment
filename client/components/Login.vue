@@ -58,8 +58,4 @@ module.exports = {
   font-size: large;
   font-family: cursive;
 }
-
-form {
-  text-align: center;
-}
 </style>

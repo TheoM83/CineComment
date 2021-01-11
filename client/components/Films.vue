@@ -117,39 +117,15 @@ films {
   text-align: left;
 }
 
-h1 {
-  text-decoration: underline;
-  text-align: center;
-  padding: 3px;
-}
-
-h2 {
-  text-align: left;
-}
-
 li {
   list-style: none;
   color: black;
   font-family: cursive;
 }
 
-li:before {
-  content: '';
-  position: absolute;
-  width: 3em;
-  height: 3.5em;
-  margin-left: -3.5em;
-  margin-top: -1em;
-}
-
 #cadre {
   border: 2px solid black;
   padding: .5em;
-}
-
-button {
-  font-weight: bolder;
-  font-size: 15px;
 }
 
 .delete {
@@ -159,6 +135,5 @@ button {
 .comment {
   background-color: cadetblue;
 }
-
 
 </style>

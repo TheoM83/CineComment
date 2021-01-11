@@ -63,9 +63,6 @@ module.exports = {
 </script>
 
 <style>
-form {
-  text-align: center;
-}
 .notconnected {
   text-align: center;
   font-weight: bold;
