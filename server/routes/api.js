@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'root',
+  password: 'FCMA77127',
   database: 'projetWeb'
  })
 

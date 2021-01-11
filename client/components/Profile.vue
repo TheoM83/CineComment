@@ -10,7 +10,7 @@
         <input type="text" v-model="mdp" placeholder="MDP" required>
         <button type="submit">UPDATE</button>
     </form>
-  <div>
+  <div v-else>
     <p>Vous n'êtes pas connecté</p>
   </div>
       
