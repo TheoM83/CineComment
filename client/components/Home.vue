@@ -12,15 +12,15 @@
       </div>
     <div>
       <p>
-      {{'Pseudo : ' + commentary.pseudo}} <br> 
-      {{'Commentaires : ' + commentary.commentaires}} <br>
+      {{commentary.pseudo + " :"}} <br> 
+      {{commentary.commentaires}} <br>
       {{'Nombre de like : ' + commentary.count}}
       </p>
       <div v-show="connected > 0">
-      <button v-if="!isLiked(commentary.idavis)" v-on:click="likeCommentary(commentary.idavis)">Like</button>
-      <button v-else v-on:click="dislikeCommentary(commentary.idavis)">Dislike</button>
+      <button class='like' v-if="!isLiked(commentary.idavis)" v-on:click="likeCommentary(commentary.idavis)">Like</button>
+      <button class='dislike' v-else v-on:click="dislikeCommentary(commentary.idavis)">Dislike</button>
       </div>
-      <button v-on:click="deleteCommentary(commentary.idavis)">Delete</button>
+      <button class='delete' v-on:click="deleteCommentary(commentary.idavis)">Delete</button>
     </div>
     <br></div><br>
   </li>
@@ -94,4 +94,28 @@ h1 {
   border: 2px solid black;
   padding: .5em;
 }
+
+.delete {
+  background-color: tomato;
+}
+
+.like {
+  background-color: greenyellow;
+}
+
+.dislike {
+  background-color:orange;
+}
+
+button {
+  font-weight: bolder;
+  font-size: 15px;
+}
+
+li {
+  font-family: cursive;
+  text-align: left;
+  color: black;
+}
+
 </style>

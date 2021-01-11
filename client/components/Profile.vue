@@ -2,16 +2,17 @@
   <div>
     <form @submit.prevent="updatePseudo" v-if="connected >0">
     <h1>Changer Pseudo</h1>
-        <input type="text" v-model="pseudo" placeholder="pseudo" required>
+        <input type="text" v-model="pseudo" placeholder="pseudo" required><br><br>
         <button type="submit">UPDATE</button>
     </form>
+    <br><br><br><br>
     <form @submit.prevent="updateMDP" v-if="connected >0">
     <h1>Changer MDP</h1>
-        <input type="text" v-model="mdp" placeholder="MDP" required>
+        <input type="text" v-model="mdp" placeholder="MDP" required><br><br>
         <button type="submit">UPDATE</button>
     </form>
   <div v-else>
-    <p>Vous n'êtes pas connecté</p>
+    <p class='notconnected'>Vous n'êtes pas connecté</p>
   </div>
       
   </div>
@@ -62,4 +63,14 @@ module.exports = {
 </script>
 
 <style>
+form {
+  text-align: center;
+}
+.notconnected {
+  text-align: center;
+  font-weight: bold;
+  color: red;
+  font-size: large;
+  font-family: cursive;
+}
 </style>

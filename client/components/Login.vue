@@ -7,7 +7,7 @@
         <button type="submit">Se Connecter</button>
       </form>
   <div v-else>
-    <p>Vous êtes déjà connecté</p>
+    <p id='connected'>Vous êtes déjà connecté</p>
   </div>
       
   </div>
@@ -51,11 +51,12 @@ module.exports = {
 </script>
 
 <style>
-p {
+#connected {
   text-align: center;
   color : blue;
   font-weight: bold;
-  font-size: x-large;
+  font-size: large;
+  font-family: cursive;
 }
 
 form {

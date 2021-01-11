@@ -129,6 +129,8 @@ h2 {
 
 li {
   list-style: none;
+  color: black;
+  font-family: cursive;
 }
 
 li:before {
@@ -157,5 +159,6 @@ button {
 .comment {
   background-color: cadetblue;
 }
+
 
 </style>
