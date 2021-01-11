@@ -3,10 +3,8 @@
   <div v-show="!addingFilm">
   <h1>Films</h1>
   <ol>
-    
-
-    
   <li v-for="film in films" :key="film.id">
+    <div id='cadre'>    
       <h2 v-show="displayFilms()" class="title">{{ film.titre }}  {{'('+film.année+')'}}</h2>
       <div v-show="displayFilms()" class="films-img">
         <div :style="{ backgroundImage: 'url(' + film.image + ')' }">
@@ -22,7 +20,7 @@
     @add-comment="addComment"
   ></new-comment>
     </div>
-    
+    <br> </div>
   <br>
   </li>
   </ol>
@@ -116,12 +114,17 @@ films {
 
 .title {
   text-decoration: underline;
+  text-align: left;
 }
 
 h1 {
   text-decoration: underline;
   text-align: center;
   padding: 3px;
+}
+
+h2 {
+  text-align: left;
 }
 
 li {
@@ -135,6 +138,11 @@ li:before {
   height: 3.5em;
   margin-left: -3.5em;
   margin-top: -1em;
+}
+
+#cadre {
+  border: 2px solid black;
+  padding: .5em;
 }
 
 button {

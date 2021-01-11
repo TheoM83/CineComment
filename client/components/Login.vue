@@ -2,8 +2,8 @@
   <div>
     <form @submit.prevent="login" v-if="connected === -1">
     <h1>Connexion</h1>
-        <input type="email" v-model="credentials.email" placeholder="Email" required>
-        <input type="password" v-model="credentials.password" placeholder="Password" required>
+        <input type="email" v-model="credentials.email" placeholder="Email" required> <br><br>
+        <input type="password" v-model="credentials.password" placeholder="Password" required> <br><br>
         <button type="submit">Se Connecter</button>
       </form>
   <div v-else>
@@ -51,4 +51,14 @@ module.exports = {
 </script>
 
 <style>
+p {
+  text-align: center;
+  color : blue;
+  font-weight: bold;
+  font-size: x-large;
+}
+
+form {
+  text-align: center;
+}
 </style>

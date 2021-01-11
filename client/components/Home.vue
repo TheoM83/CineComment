@@ -4,6 +4,7 @@
   <h1>Commentaires</h1>
   <ol>
   <li v-for="commentary in commentaries" :key="commentary.id">
+    <div id='cadre'>
     <p class='title'>{{commentary.titre}}</p>
     <div class="commentaries-img">
         <div :style="{ backgroundImage: 'url(' + commentary.image + ')' }">
@@ -13,8 +14,7 @@
       <p>
       {{'Pseudo : ' + commentary.pseudo}} <br> 
       {{'Commentaires : ' + commentary.commentaires}} <br>
-      {{'Nombre de like : ' + commentary.count}} <br>
-      {{commentary.idavis}}
+      {{'Nombre de like : ' + commentary.count}}
       </p>
       <div v-show="connected > 0">
       <button v-if="!isLiked(commentary.idavis)" v-on:click="likeCommentary(commentary.idavis)">Like</button>
@@ -22,6 +22,7 @@
       </div>
       <button v-on:click="deleteCommentary(commentary.idavis)">Delete</button>
     </div>
+    <br></div><br>
   </li>
   </ol>
 </div>
@@ -87,5 +88,10 @@ h1 {
   text-decoration: underline;
   text-align: center;
   padding: 3px;
+}
+
+#cadre {
+  border: 2px solid black;
+  padding: .5em;
 }
 </style>
