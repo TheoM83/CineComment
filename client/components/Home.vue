@@ -13,7 +13,8 @@
       <p>
       {{'Pseudo : ' + commentary.pseudo}} <br> 
       {{'Commentaires : ' + commentary.commentaires}} <br>
-      {{'Nombre de like : ' + commentary.count}}
+      {{'Nombre de like : ' + commentary.count}} <br>
+      {{commentary.idavis}}
       </p>
       <div v-show="connected > 0">
       <button v-if="!isLiked(commentary.idavis)" v-on:click="likeCommentary(commentary.idavis)">Like</button>

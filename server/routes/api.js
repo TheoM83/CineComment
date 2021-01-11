@@ -239,6 +239,8 @@ router.post('/commentaryL', async(req, res) => {
 })
 
 async function addCommentaryLike(idCommentary, idUser) {
+  console.log(idCommentary)
+  console.log(idUser)
   const sql = "Insert into voteavis(idavis, iduser) values ($1,$2);"
   const r = await client.query({
     text: sql,
